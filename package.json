@@ -1,6 +1,6 @@
 {
   "name": "flow-iqr",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Reduce transform stream which calculates the interquartile range over streamed data.",
   "author": {
     "name": "Athan Reines",
