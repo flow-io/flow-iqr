@@ -16,31 +16,28 @@ $ npm install flow-iqr
 ## Examples
 
 ``` javascript
-var // Flow interquartile range stream generator:
+var eventStream = require( 'event-stream' ),
 	qStream = require( 'flow-iqr' );
 
-var data = new Array( 1000 ),
-	stream;
-
 // Create some data...
-for ( var i = 0; i < 1000; i++ ) {
+var data = new Array( 1000 );
+for ( var i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.round( Math.random() * 100 );
 }
 
+// Create a readable stream:
+var readStream = eventStream.readArray( data );
+
 // Create a new stream:
-stream = qStream()
+var stream = qStream()
 	.stream();
 
-// Add a listener:
-stream.on( 'data', function( iqr ) {
-	console.log( 'Interquartile Range: ' + iqr );
-});
-
-// Write the data to the stream...
-for ( var j = 0; j < data.length; j++ ) {
-	stream.write( data[ j ] );
-}
-stream.end();
+// Create a pipeline:
+readStream.pipe( stream )
+	.pipe( eventStream.map( function( d, clbk ) {
+		clbk( null, d.toString() );
+	}))
+	.pipe( process.stdout );
 ```
 
 ## Tests
